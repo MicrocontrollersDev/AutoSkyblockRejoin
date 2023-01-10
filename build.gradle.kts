@@ -38,15 +38,8 @@ loom {
     if (project.platform.isLegacyForge) {
         launchConfigs.named("client") {
             arg("--tweakClass", "cc.polyfrost.oneconfigwrapper.OneConfigWrapper")
-            property("mixin.debug.export", "true")
         }
     }
-    if (project.platform.isForge) {
-        forge {
-            mixinConfig("mixins.${mod_id}.json")
-        }
-    }
-    mixin.defaultRefmapName.set("mixins.${mod_id}.refmap.json")
 }
 
 val shade: Configuration by configurations.creating {
@@ -67,7 +60,6 @@ dependencies {
     modCompileOnly("cc.polyfrost:oneconfig-$platform:0.1.0-alpha+")
 
     if (platform.isLegacyForge) {
-        compileOnly("org.spongepowered:mixin:0.7.11-SNAPSHOT")
         shade("cc.polyfrost:oneconfig-wrapper-launchwrapper:1.0.0-alpha+")
     }
 }
@@ -85,7 +77,7 @@ tasks.processResources {
     inputs.property("java_level", compatLevel)
     inputs.property("version", mod_version)
     inputs.property("mcVersionStr", project.platform.mcVersionStr)
-    filesMatching(listOf("mcmod.info", "mixins.${mod_id}.json", "mods.toml")) {
+    filesMatching(listOf("mcmod.info", "mods.toml")) {
         expand(
             mapOf(
                 "id" to mod_id,
@@ -140,7 +132,6 @@ tasks {
                     "ModSide" to "CLIENT",
                     "ForceLoadAsMod" to true,
                     "TweakOrder" to "0",
-                    "MixinConfigs" to "mixin.${mod_id}.json",
                     "TweakClass" to "cc.polyfrost.oneconfigwrapper.OneConfigWrapper"
                 )
             )
