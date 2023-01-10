@@ -2,13 +2,13 @@
   {
     "modid": "${id}",
     "name": "${name}",
-    "description": "",
+    "description": "Automatically rejoin Skyblock when Hypixel kicks you for errors",
     "version": "${version}",
     "mcversion": "1.8.9",
     "url": "",
     "updateUrl": "",
     "authorList": [
-      "Your Name"
+      "Microcontrollers"
     ],
     "credits": "",
     "logoFile": "",
