@@ -9,12 +9,22 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.concurrent.TimeUnit;
 
 public class Rejoin {
+    private static final String[] disconnectMessages = {
+            "An exception occurred in your connection, so you were put in the SkyBlock Lobby!",
+            "Evacuating to Hub...",
+            "This server will restart soon: Game Update",
+            "Out of sync, check your internet connection!",
+            "[Important] This server will restart soon: Scheduled Restart"
+    };
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
-        if (RejoinConfig.autoSkyblockRejoin && event.message.getUnformattedText().equals("An exception occurred in your connection, so you were put in the SkyBlock Lobby!")) {
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 10, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 10, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 30, TimeUnit.SECONDS);
+        String message = event.message.getUnformattedText();
+        for (String disc : disconnectMessages) {
+            if (RejoinConfig.autoSkyblockRejoin && message.equals(disc)) {
+                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
+                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 30, TimeUnit.SECONDS);
+                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 45, TimeUnit.SECONDS);
+            }
         }
     }
 }

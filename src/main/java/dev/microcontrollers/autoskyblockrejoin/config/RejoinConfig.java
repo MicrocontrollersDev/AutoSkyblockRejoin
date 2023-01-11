@@ -7,7 +7,8 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 
 public class RejoinConfig extends Config {
     @Switch(
-            name = "Automatically Rejoin Skyblock"
+            name = "Automatically Rejoin Skyblock",
+            subcategory = "General"
     )
     public static boolean autoSkyblockRejoin = false;
 
