@@ -1,5 +1,7 @@
 package dev.microcontrollers.autoskyblockrejoin;
 
+import cc.polyfrost.oneconfig.libs.universal.ChatColor;
+import cc.polyfrost.oneconfig.libs.universal.UChat;
 import cc.polyfrost.oneconfig.utils.Multithreading;
 import dev.microcontrollers.autoskyblockrejoin.config.RejoinConfig;
 import net.minecraft.client.Minecraft;
@@ -16,14 +18,16 @@ public class Rejoin {
             "Out of sync, check your internet connection!",
             "[Important] This server will restart soon: Scheduled Restart"
     };
+
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
-            if (RejoinConfig.autoSkyblockRejoin && message.equals(disc)) {
-                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
+            if (RejoinConfig.autoSkyblockRejoin && message.contains(disc)) {
+                if (RejoinConfig.hytilsWarning) UChat.chat(ChatColor.GOLD + "If you don't have Hytils Reborn, this may not work!");
                 Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 30, TimeUnit.SECONDS);
-                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 45, TimeUnit.SECONDS);
+                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 75, TimeUnit.SECONDS);
+                return;
             }
         }
     }
