@@ -22,13 +22,6 @@ public class RejoinConfig extends Config {
     )
     public static boolean autoSkyblockRejoin = false;
 
-    @Switch(
-            name = "Hytils Reborn Warning",
-            description = "Hytils Reborn is required for this mod to work. Specifically the limbo /play helper feature.",
-            subcategory = "General"
-    )
-    public static boolean hytilsWarning = true;
-
     public RejoinConfig() {
         super(new Mod("Auto Skyblock Rejoin", ModType.HYPIXEL), "autoskyblockrejoin.json");
         initialize();

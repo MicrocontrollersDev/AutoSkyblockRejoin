@@ -23,8 +23,8 @@ public class Rejoin {
     public void onChat(final ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
-            if (RejoinConfig.autoSkyblockRejoin && message.contains(disc)) {
-                if (RejoinConfig.hytilsWarning) UChat.chat(ChatColor.GOLD + "If you don't have Hytils Reborn, this may not work!");
+            if (RejoinConfig.autoSkyblockRejoin && message.equals(disc)) {
+                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 20, TimeUnit.SECONDS);
                 Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 30, TimeUnit.SECONDS);
                 Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 75, TimeUnit.SECONDS);
                 return;
