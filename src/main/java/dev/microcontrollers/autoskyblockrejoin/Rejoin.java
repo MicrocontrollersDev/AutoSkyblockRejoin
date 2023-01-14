@@ -1,7 +1,5 @@
 package dev.microcontrollers.autoskyblockrejoin;
 
-import cc.polyfrost.oneconfig.libs.universal.ChatColor;
-import cc.polyfrost.oneconfig.libs.universal.UChat;
 import cc.polyfrost.oneconfig.utils.Multithreading;
 import dev.microcontrollers.autoskyblockrejoin.config.RejoinConfig;
 import net.minecraft.client.Minecraft;
