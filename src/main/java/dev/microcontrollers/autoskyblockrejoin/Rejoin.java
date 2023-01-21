@@ -18,7 +18,9 @@ public class Rejoin {
             "A disconnect occurred in your connection, so you were put in the SkyBlock Lobby!",
             "You are being transferred to the HUB for being AFK!",
             "You are being transferred to the Prototype Lobby for being AFK!",
-            "You are AFK. Move around to return from AFK."
+            "You are AFK. Move around to return from AFK.",
+            "You were spawned in Limbo.",
+            "/limbo for more information."
     };
 
     @SubscribeEvent
