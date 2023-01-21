@@ -1,6 +1,9 @@
 package dev.microcontrollers.autoskyblockrejoin;
 
 import cc.polyfrost.oneconfig.utils.Multithreading;
+import cc.polyfrost.oneconfig.utils.Notifications;
+import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
+import cc.polyfrost.oneconfig.utils.hypixel.LocrawInfo;
 import dev.microcontrollers.autoskyblockrejoin.config.RejoinConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
@@ -22,17 +25,35 @@ public class Rejoin {
             "You were spawned in Limbo.",
             "/limbo for more information."
     };
+    public boolean warpAttempt = false;
+    public boolean retry = false;
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
-            if (RejoinConfig.autoSkyblockRejoin && message.equals(disc)) {
-                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
-                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
-                Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 105, TimeUnit.SECONDS);
+            if (RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel() && message.equals(disc)) {
+                warpAttempt = true;
                 return;
             }
         }
+        if ((warpAttempt || retry) && RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel()) {
+            if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 105, TimeUnit.SECONDS);
+            Multithreading.schedule(() -> warpAttempt = false, 115, TimeUnit.SECONDS);
+            Multithreading.schedule(() -> shouldRetry(), 115, TimeUnit.SECONDS);
+        }
+    }
+
+    public void shouldRetry() {
+        LocrawInfo locraw = HypixelUtils.INSTANCE.getLocrawInfo();
+        if (locraw != null && locraw.getGameType() != LocrawInfo.GameType.SKYBLOCK) {
+            retry = true;
+            Notifications.INSTANCE.send("AutoSkyblockRejoin", "Failed to join Skyblock. Retrying. This may take up to another 2 minutes. If this fails, please report in discord.gg/rejfv9kFJj.");
+        }
+        else retry = false;
+        Notifications.INSTANCE.send("AutoSkyblockRejoin", "Should be connected to Skyblock. Please report this in discord.gg/rejfv9kFJj if it did not work.");
     }
 }
