@@ -27,18 +27,20 @@ public class Rejoin {
     };
     public boolean warpAttempt = false;
     public boolean retry = false;
+    public boolean isFree = true;
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
             if (RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel() && message.equals(disc)) {
-                warpAttempt = true;
+                if (isFree) warpAttempt = true;
                 break;
             }
         }
         if ((warpAttempt || retry) && RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel()) {
             warpAttempt = false;
+            isFree = false;
             if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
@@ -53,7 +55,10 @@ public class Rejoin {
             retry = true;
             Notifications.INSTANCE.send("AutoSkyblockRejoin", "Failed to join Skyblock. Retrying. This may take up to another 2 minutes. If this fails, please report in discord.gg/rejfv9kFJj.");
         }
-        else retry = false;
-        Notifications.INSTANCE.send("AutoSkyblockRejoin", "Should be connected to Skyblock. Please report this in discord.gg/rejfv9kFJj if it did not work.");
+        else {
+            retry = false;
+            isFree = true;
+            Notifications.INSTANCE.send("AutoSkyblockRejoin", "Should be connected to Skyblock. Please report this in discord.gg/rejfv9kFJj if it did not work.");
+        }
     }
 }
