@@ -34,15 +34,15 @@ public class Rejoin {
         for (String disc : disconnectMessages) {
             if (RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel() && message.equals(disc)) {
                 warpAttempt = true;
-                return;
+                break;
             }
         }
         if ((warpAttempt || retry) && RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel()) {
+            warpAttempt = false;
             if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 105, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> warpAttempt = false, 115, TimeUnit.SECONDS);
             Multithreading.schedule(() -> shouldRetry(), 115, TimeUnit.SECONDS);
         }
     }
