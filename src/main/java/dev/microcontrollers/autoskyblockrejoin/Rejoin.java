@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Rejoin {
@@ -43,10 +44,10 @@ public class Rejoin {
             isFree = false;
             if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
             retry = false;
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 105, TimeUnit.SECONDS);
-            Multithreading.schedule(() -> shouldRetry(), 115, TimeUnit.SECONDS);
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), (new Random().nextInt(35 - 25) + 25), TimeUnit.SECONDS);
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), (new Random().nextInt(70 - 50) + 50), TimeUnit.SECONDS);
+            Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), (new Random().nextInt(110 - 100) + 100), TimeUnit.SECONDS);
+            Multithreading.schedule(() -> shouldRetry(), (new Random().nextInt(120 - 110) + 110), TimeUnit.SECONDS);
         }
     }
 
