@@ -42,6 +42,7 @@ public class Rejoin {
             warpAttempt = false;
             isFree = false;
             if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
+            retry = false;
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), 30, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), 60, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), 105, TimeUnit.SECONDS);
