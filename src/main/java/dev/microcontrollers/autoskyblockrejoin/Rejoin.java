@@ -6,6 +6,7 @@ import cc.polyfrost.oneconfig.utils.hypixel.HypixelUtils;
 import cc.polyfrost.oneconfig.utils.hypixel.LocrawInfo;
 import dev.microcontrollers.autoskyblockrejoin.config.RejoinConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -61,6 +62,10 @@ public class Rejoin {
             retry = false;
             isFree = true;
             Notifications.INSTANCE.send("AutoSkyblockRejoin", "Should be connected to Skyblock. Please report this in discord.gg/rejfv9kFJj if it did not work.");
+            if (RejoinConfig.shouldShift) {
+                KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), true);
+                Multithreading.schedule(() -> KeyBinding.unPressAllKeys(), RejoinConfig.shiftTime, TimeUnit.SECONDS);
+            }
         }
     }
 }
