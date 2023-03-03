@@ -24,15 +24,23 @@ public class RejoinConfig extends Config {
     public static boolean autoSkyblockRejoin = false;
 
     @Switch(
+            name = "Warp Garden",
+            description = "Word to garden instead of your island.",
+            subcategory = "General"
+    )
+    public static boolean shouldWarpGarden = false;
+
+
+    @Switch(
             name = "Hold shift on Rejoin",
-            description = "Hold shift when rejoining to prevent flying",
+            description = "Hold shift when rejoining to prevent flying.",
             subcategory = "General"
     )
     public static boolean shouldShift = false;
 
     @Slider(
             name = "Shift Time",
-            description = "Measured in seconds",
+            description = "Measured in seconds.",
             subcategory = "General",
             min = 1,
             max = 5,
