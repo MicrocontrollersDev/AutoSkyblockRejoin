@@ -14,6 +14,14 @@ The mod listens for certain disconnect messages in the chat and if it detects on
 
 As always, use at your own risk.
 
+## Is It Allowed?
+
+As I said above, use at your own risk. If you want to look at the disallowed Skyblock mods, specifically the "Disallowed AFK Methods" you can read this:
+
+> Disallowed methods include but are not limited to using glitches (examples: F11, alt+tab), modifications, bugs, third-party software, hardware, or objects such as tape or rocks. Players found collecting experience, items, or coins using disallowed methods will be punished.
+
+This mod is undoubtedly third party software and has to do with AFK, but I do not think this rule applies here. This rule above is specifically talking about methods to prevent the AFK kick. This mod does not prevent the kick, but instead warps you back to your island after around 2 minutes of being kicked. The goal with this mod is not to bypass Hypixel's rules, but rather is meant to be used along with an allowed method of AFK and act as a backup when Hypixel (inevitably) errors out and kicks you anyways, regardless of AFK method. This mod was made at request of a player who was consistently getting kicked shortly after going AFK due to random errors, despite following the allowed AFK methods.
+
 ## Notes
 
 This mod uses OneConfig for its config, multithreading capabilities, and notifications, as well as its Hypixel API to find the players Locraw and whether they are on Hypixel in the first place.
