@@ -10,7 +10,7 @@ import cc.polyfrost.oneconfig.config.data.ModType;
 
 public class RejoinConfig extends Config {
     @Info(
-            text = "Only turn this on when AFK. Turn off when done with your AFK session.",
+            text = "Only turn this on when AFK. Turn off when done with your AFK session. The mod can be toggled in the main OneConfig screen.",
             size = 2,
             type = InfoType.WARNING,
             subcategory = "General"

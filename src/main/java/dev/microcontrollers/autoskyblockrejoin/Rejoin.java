@@ -38,7 +38,7 @@ public class Rejoin {
     public boolean warpAttempt = false;
     public boolean retry = false;
     public boolean isFree = true;
-    boolean attempting = false;
+    public boolean attempting = false;
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
