@@ -48,6 +48,12 @@ public class RejoinConfig extends Config {
     )
     public static int shiftTime = 1;
 
+    @Switch(
+            name = "Automatically Rejoin Hypixel on Disconnect",
+            subcategory = "General"
+    )
+    public static boolean serverConnect = false;
+
     public RejoinConfig() {
         super(new Mod("Auto Skyblock Rejoin", ModType.HYPIXEL), "autoskyblockrejoin.json");
         initialize();

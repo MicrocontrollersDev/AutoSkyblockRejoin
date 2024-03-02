@@ -8,9 +8,14 @@ import cc.polyfrost.oneconfig.utils.hypixel.LocrawInfo;
 import cc.polyfrost.oneconfig.utils.hypixel.LocrawUtil;
 import dev.microcontrollers.autoskyblockrejoin.config.RejoinConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiDisconnected;
+import net.minecraft.client.gui.GuiMultiplayer;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.net.URI;
 import java.util.Random;
@@ -33,9 +38,11 @@ public class Rejoin {
     public boolean warpAttempt = false;
     public boolean retry = false;
     public boolean isFree = true;
+    boolean attempting = false;
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
+        if (!AutoSkyblockRejoin.config.enabled) return;
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
             if (RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel() && message.equals(disc)) {
@@ -59,7 +66,7 @@ public class Rejoin {
                 Multithreading.schedule(() -> Notifications.INSTANCE.send("AutoSkyblockRejoin", "Attempting to join the garden. This may take several seconds."), 95, TimeUnit.SECONDS);
                 Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/warp garden"), (new Random().nextInt(110 - 100) + 100), TimeUnit.SECONDS);
             }
-            Multithreading.schedule(() -> shouldRetry(), (new Random().nextInt(120 - 110) + 110), TimeUnit.SECONDS);
+            Multithreading.schedule(this::shouldRetry, (new Random().nextInt(120 - 110) + 110), TimeUnit.SECONDS);
         }
     }
 
@@ -75,8 +82,21 @@ public class Rejoin {
             Notifications.INSTANCE.send("AutoSkyblockRejoin", "Should be connected to Skyblock. Please report this in the discord if it did not work.", 10000f, () -> UDesktop.browse(URI.create("https://discord.gg/rejfv9kFJj")));
             if (RejoinConfig.shouldShift) {
                 KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindSneak.getKeyCode(), true);
-                Multithreading.schedule(() -> KeyBinding.unPressAllKeys(), RejoinConfig.shiftTime, TimeUnit.SECONDS);
+                Multithreading.schedule(KeyBinding::unPressAllKeys, RejoinConfig.shiftTime, TimeUnit.SECONDS);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
+        if (!AutoSkyblockRejoin.config.enabled) return;
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiDisconnected && RejoinConfig.serverConnect && !attempting) {
+            Notifications.INSTANCE.send("AutoSkyblockRejoin", "Server disconnect detected. Attempting to rejoin Hypixel. Please report this in the discord if it did not work.", 10000f, () -> UDesktop.browse(URI.create("https://discord.gg/rejfv9kFJj")));
+            attempting = true;
+            Multithreading.schedule(() -> FMLClientHandler.instance().connectToServer(
+                    new GuiMultiplayer(Minecraft.getMinecraft().currentScreen),
+                    new ServerData("hypixel", "hypixel.net", false)), (new Random().nextInt(3) + 3), TimeUnit.SECONDS); // between 3 and 5 seconds
+            Multithreading.schedule(() -> attempting = false, 6, TimeUnit.SECONDS);
         }
     }
 }
