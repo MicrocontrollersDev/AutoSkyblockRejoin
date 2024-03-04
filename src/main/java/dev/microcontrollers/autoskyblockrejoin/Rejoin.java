@@ -39,6 +39,7 @@ public class Rejoin {
     public boolean retry = false;
     public boolean isFree = true;
     public boolean attempting = false;
+    public boolean reconnect = false;
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
@@ -50,11 +51,17 @@ public class Rejoin {
                 break;
             }
         }
+        rejoin();
+    }
+
+    public void rejoin() {
         if ((warpAttempt || retry) && RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel()) {
             warpAttempt = false;
             isFree = false;
-            if (!retry) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
+            if (!retry && !reconnect) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Forced disconnect detected. Attempting to rejoin Skyblock. This will take around 2 minutes.");
+            if (reconnect) Notifications.INSTANCE.send("AutoSkyblockRejoin", "Successfully rejoined Hypixel. Attempting to rejoin Skyblock. This will take around 2 minutes.");
             retry = false;
+            reconnect = false;
             Multithreading.schedule(() -> Notifications.INSTANCE.send("AutoSkyblockRejoin", "Attempting to join the lobby. This may take several seconds."), 20, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), (new Random().nextInt(35 - 25) + 25), TimeUnit.SECONDS);
             Multithreading.schedule(() -> Notifications.INSTANCE.send("AutoSkyblockRejoin", "Attempting to join skyblock. This may take several seconds."), 45, TimeUnit.SECONDS);
@@ -91,12 +98,14 @@ public class Rejoin {
     public void onTick(TickEvent.ClientTickEvent event) {
         if (!AutoSkyblockRejoin.config.enabled) return;
         if (Minecraft.getMinecraft().currentScreen instanceof GuiDisconnected && RejoinConfig.serverConnect && !attempting) {
-            Notifications.INSTANCE.send("AutoSkyblockRejoin", "Server disconnect detected. Attempting to rejoin Hypixel. Please report this in the discord if it did not work.", 10000f, () -> UDesktop.browse(URI.create("https://discord.gg/rejfv9kFJj")));
+            Notifications.INSTANCE.send("AutoSkyblockRejoin", "Server disconnect detected. Attempting to rejoin Hypixel. Please report this in the discord if it did not work.", () -> UDesktop.browse(URI.create("https://discord.gg/rejfv9kFJj")));
             attempting = true;
+            reconnect = true;
             Multithreading.schedule(() -> FMLClientHandler.instance().connectToServer(
                     new GuiMultiplayer(Minecraft.getMinecraft().currentScreen),
                     new ServerData("hypixel", "hypixel.net", false)), (new Random().nextInt(3) + 3), TimeUnit.SECONDS); // between 3 and 5 seconds
-            Multithreading.schedule(() -> attempting = false, 6, TimeUnit.SECONDS);
+            Multithreading.schedule(this::shouldRetry, (new Random().nextInt(3) + 5), TimeUnit.SECONDS);
+            Multithreading.schedule(() -> attempting = false, 10, TimeUnit.SECONDS);
         }
     }
 }
