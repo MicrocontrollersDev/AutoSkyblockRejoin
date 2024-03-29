@@ -25,7 +25,7 @@ public class Rejoin {
     private static final String[] disconnectMessages = {
             "An exception occurred in your connection, so you were put in the SkyBlock Lobby!",
             "Evacuating to Hub...",
-            "This server will restart soon: Game Update",
+            "[Important] This server will restart soon: Game Update",
             "Out of sync, check your internet connection!",
             "[Important] This server will restart soon: Scheduled Restart",
             "A disconnect occurred in your connection, so you were put in the SkyBlock Lobby!",
@@ -43,10 +43,12 @@ public class Rejoin {
 
     @SubscribeEvent
     public void onChat(final ClientChatReceivedEvent event) {
+        if (!RejoinConfig.autoSkyblockRejoin) return;
+        if (!HypixelUtils.INSTANCE.isHypixel()) return;
         if (!AutoSkyblockRejoin.config.enabled) return;
         String message = event.message.getUnformattedText();
         for (String disc : disconnectMessages) {
-            if (RejoinConfig.autoSkyblockRejoin && HypixelUtils.INSTANCE.isHypixel() && message.equals(disc)) {
+            if (message.equals(disc)) {
                 if (isFree) warpAttempt = true;
                 break;
             }
