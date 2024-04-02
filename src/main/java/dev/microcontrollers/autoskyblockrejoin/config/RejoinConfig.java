@@ -1,6 +1,7 @@
 package dev.microcontrollers.autoskyblockrejoin.config;
 
 import cc.polyfrost.oneconfig.config.Config;
+import cc.polyfrost.oneconfig.config.annotations.DualOption;
 import cc.polyfrost.oneconfig.config.annotations.Info;
 import cc.polyfrost.oneconfig.config.annotations.Slider;
 import cc.polyfrost.oneconfig.config.annotations.Switch;
@@ -18,28 +19,31 @@ public class RejoinConfig extends Config {
     private boolean warning = false;
 
     @Switch(
-            name = "Automatically Rejoin Skyblock",
+            name = "Rejoin Skyblock",
+            description = "This is a general mod toggle.",
             subcategory = "General"
     )
     public static boolean autoSkyblockRejoin = false;
 
-    @Switch(
-            name = "Warp Garden",
+    @DualOption(
+            name = "Warp Destination",
             description = "Word to garden instead of your island.",
-            subcategory = "General"
+            subcategory = "General",
+            left = "Island",
+            right = "Garden"
     )
-    public static boolean shouldWarpGarden = false;
+    public static boolean warpDestinationGarden = false;
 
 
     @Switch(
-            name = "Hold shift on Rejoin",
-            description = "Hold shift when rejoining to prevent flying.",
+            name = "Hold Sneak on Rejoin",
+            description = "Hold sneak when rejoining to prevent flying.",
             subcategory = "General"
     )
     public static boolean shouldShift = false;
 
     @Slider(
-            name = "Shift Time",
+            name = "Sneak Time",
             description = "Measured in seconds.",
             subcategory = "General",
             min = 1,
@@ -49,7 +53,8 @@ public class RejoinConfig extends Config {
     public static int shiftTime = 1;
 
     @Switch(
-            name = "Automatically Rejoin Hypixel on Disconnect",
+            name = "Rejoin Hypixel on Disconnect",
+            description = "Untested, but should work in theory. Automatically attempts a full reconnect to the network and then to SkyBlock.",
             subcategory = "General"
     )
     public static boolean serverConnect = false;

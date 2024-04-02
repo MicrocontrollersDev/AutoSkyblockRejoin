@@ -68,7 +68,7 @@ public class Rejoin {
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/l"), (new Random().nextInt(35 - 25) + 25), TimeUnit.SECONDS);
             Multithreading.schedule(() -> Notifications.INSTANCE.send("AutoSkyblockRejoin", "Attempting to join skyblock. This may take several seconds."), 45, TimeUnit.SECONDS);
             Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/play skyblock"), (new Random().nextInt(70 - 50) + 50), TimeUnit.SECONDS);
-            if (!RejoinConfig.shouldWarpGarden) {
+            if (!RejoinConfig.warpDestinationGarden) {
                 Multithreading.schedule(() -> Notifications.INSTANCE.send("AutoSkyblockRejoin", "Attempting to join your island. This may take several seconds."), 95, TimeUnit.SECONDS);
                 Multithreading.schedule(() -> Minecraft.getMinecraft().thePlayer.sendChatMessage("/is"), (new Random().nextInt(110 - 100) + 100), TimeUnit.SECONDS);
             } else {
